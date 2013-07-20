@@ -177,14 +177,17 @@ sub build_class {
     my %metadata = @_;
 
     my $class_Class = 'mop::class';
-    if ( exists $metadata{ 'metaclass' } ) {
-        $class_Class = delete $metadata{ 'metaclass' };
-    }
 
     if ( exists $metadata{ 'extends' } ) {
         $metadata{ 'superclass' } = delete $metadata{ 'extends' };
+        my $m = mop::util::find_meta($metadata{'superclass'});
+        $class_Class = ref $m;
     } else {
         $metadata{ 'superclass' } = 'mop::object';
+    }
+
+    if ( exists $metadata{ 'metaclass' } ) {
+        $class_Class = delete $metadata{ 'metaclass' };
     }
 
     if ( exists $metadata{ 'with' } ) {
